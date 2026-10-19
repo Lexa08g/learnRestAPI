@@ -1,0 +1,87 @@
+@baseUrl = http://127.0.0.1:8000
+@token = 
+
+### 1. Register User
+POST {{baseUrl}}/api/register
+Accept: application/json
+Content-Type: application/json
+
+{
+    "name": "Budi Santoso",
+    "email": "budi@example.com",
+    "password": "password123"
+}
+
+### 2. Login User
+# @name login
+POST {{baseUrl}}/api/login
+Accept: application/json
+Content-Type: application/json
+
+{
+    "email": "admin@example.com",
+    "password": "password123"
+}
+
+### Simpan token dari response login:
+@authToken = {{login.response.body.token}}
+
+### 3. Get User Profile (Sanctum Auth)
+GET {{baseUrl}}/api/profile
+Accept: application/json
+Authorization: Bearer {{authToken}}
+
+### 4. Get All Petani (Sanctum Auth)
+GET {{baseUrl}}/api/petani
+Accept: application/json
+Authorization: Bearer {{authToken}}
+
+### 5. Get Petani with Filter / Search
+GET {{baseUrl}}/api/petani?s=Wayan&id_kelompok=1
+Accept: application/json
+Authorization: Bearer {{authToken}}
+
+### 6. Create Petani (Sanctum Auth)
+POST {{baseUrl}}/api/petani
+Accept: application/json
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "nama": "I Made Sujana",
+    "nik": "5102019901800007",
+    "alamat": "Desa Lodtunduh, Ubud, Gianyar",
+    "telp": "081299887766",
+    "id_kelompok_tani": 1,
+    "status": "Y"
+}
+
+### 7. Get Petani by ID
+GET {{baseUrl}}/api/petani/1
+Accept: application/json
+Authorization: Bearer {{authToken}}
+
+### 8. Update Petani by ID
+PUT {{baseUrl}}/api/petani/1
+Accept: application/json
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "nama": "I Wayan Sudarma Updated",
+    "nik": "5102011204850001",
+    "alamat": "Desa Singapadu Kaler, Gianyar",
+    "telp": "081234567890",
+    "id_kelompok_tani": 1,
+    "status": "Y"
+}
+
+### 9. Delete Petani
+DELETE {{baseUrl}}/api/petani/1
+Accept: application/json
+Authorization: Bearer {{authToken}}
+
+### 10. Logout User
+POST {{baseUrl}}/api/logout
+Accept: application/json
+Authorization: Bearer {{authToken}}
