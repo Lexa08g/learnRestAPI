@@ -1,87 +1,88 @@
-@baseUrl = http://127.0.0.1:8000
-@token = 
+### Pengujian REST API & Sanctum Auth
+@baseUrl = http://127.0.0.1:8000/api
 
-### 1. Register User
-POST {{baseUrl}}/api/register
+### 1. Register User Baru
+# @name register
+POST {{baseUrl}}/register
 Accept: application/json
 Content-Type: application/json
 
 {
-    "name": "Budi Santoso",
-    "email": "budi@example.com",
+    "name": "Agus Seputra",
+    "email": "agus@yahoo.com",
     "password": "password123"
 }
 
-### 2. Login User
+### 2. Login (Mendapatkan Bearer Token)
 # @name login
-POST {{baseUrl}}/api/login
+POST {{baseUrl}}/login
 Accept: application/json
 Content-Type: application/json
 
 {
-    "email": "admin@example.com",
-    "password": "password123"
+    "email": "test@example.com",
+    "password": "password"
 }
 
-### Simpan token dari response login:
-@authToken = {{login.response.body.token}}
+@token = {{login.response.body.token}}
 
-### 3. Get User Profile (Sanctum Auth)
-GET {{baseUrl}}/api/profile
+### 3. Cek Profil (Sanctum Protected)
+GET {{baseUrl}}/profile
 Accept: application/json
-Authorization: Bearer {{authToken}}
+Authorization: Bearer {{token}}
 
-### 4. Get All Petani (Sanctum Auth)
-GET {{baseUrl}}/api/petani
+### 4. Logout
+POST {{baseUrl}}/logout
 Accept: application/json
-Authorization: Bearer {{authToken}}
+Authorization: Bearer {{token}}
 
-### 5. Get Petani with Filter / Search
-GET {{baseUrl}}/api/petani?s=Wayan&id_kelompok=1
+### 5. GET Products Tanpa Token (Harus 401)
+GET {{baseUrl}}/products
 Accept: application/json
-Authorization: Bearer {{authToken}}
 
-### 6. Create Petani (Sanctum Auth)
-POST {{baseUrl}}/api/petani
+### 6. GET Semua Produk (Dengan Bearer Token)
+GET {{baseUrl}}/products
 Accept: application/json
-Authorization: Bearer {{authToken}}
+Authorization: Bearer {{token}}
+
+### 7. GET Detail Produk ID 1
+GET {{baseUrl}}/products/1
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### 8. POST Tambah Produk Baru
+POST {{baseUrl}}/products
+Accept: application/json
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "nama": "I Made Sujana",
-    "nik": "5102019901800007",
-    "alamat": "Desa Lodtunduh, Ubud, Gianyar",
-    "telp": "081299887766",
-    "id_kelompok_tani": 1,
-    "status": "Y"
+    "name": "OK Computer",
+    "artist": "Radiohead",
+    "format": "Vinyl LP (180g)",
+    "description": "Album legendaris Radiohead tahun 1997.",
+    "category_id": 1,
+    "price": 520000,
+    "stock": 10
 }
 
-### 7. Get Petani by ID
-GET {{baseUrl}}/api/petani/1
+### 9. PUT Update Produk ID 1
+PUT {{baseUrl}}/products/1
 Accept: application/json
-Authorization: Bearer {{authToken}}
-
-### 8. Update Petani by ID
-PUT {{baseUrl}}/api/petani/1
-Accept: application/json
-Authorization: Bearer {{authToken}}
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "nama": "I Wayan Sudarma Updated",
-    "nik": "5102011204850001",
-    "alamat": "Desa Singapadu Kaler, Gianyar",
-    "telp": "081234567890",
-    "id_kelompok_tani": 1,
-    "status": "Y"
+    "name": "AM (Deluxe Edition)",
+    "artist": "Arctic Monkeys",
+    "format": "Vinyl LP (180g)",
+    "description": "Album studio kelima legendaris Arctic Monkeys.",
+    "category_id": 1,
+    "price": 540000,
+    "stock": 20
 }
 
-### 9. Delete Petani
-DELETE {{baseUrl}}/api/petani/1
+### 10. DELETE Hapus Produk ID 1
+DELETE {{baseUrl}}/products/1
 Accept: application/json
-Authorization: Bearer {{authToken}}
-
-### 10. Logout User
-POST {{baseUrl}}/api/logout
-Accept: application/json
-Authorization: Bearer {{authToken}}
+Authorization: Bearer {{token}}

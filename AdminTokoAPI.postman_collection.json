@@ -1,0 +1,387 @@
+{
+	"info": {
+		"_postman_id": "7f884128-d897-4221-a12d-bab3-admin-toko-api",
+		"name": "AdminTokoAPI",
+		"description": "Koleksi Postman untuk pengujian RESTful API Laravel Bab III Backend (Agus Seputra).\nMencakup Authentication (Sanctum), CRUD Products (API Resource), dan File Storage Upload.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Agus Seputra\",\n    \"email\": \"agus@yahoo.com\",\n    \"password\": \"password123\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/register",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"register"
+					]
+				},
+				"description": "Endpoint pendaftaran user baru (Subbab 3.4.7)"
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"if (jsonData.token) {",
+							"    pm.collectionVariables.set(\"token\", jsonData.token);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"password\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"login"
+					]
+				},
+				"description": "Endpoint autentikasi login pengguna untuk memperoleh Bearer Token (Subbab 3.4.7)"
+			},
+			"response": []
+		},
+		{
+			"name": "GET",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/products",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"products"
+					]
+				},
+				"description": "Menampilkan seluruh daftar produk terpaginasi (Subbab 3.4.5)"
+			},
+			"response": []
+		},
+		{
+			"name": "Show",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/products/1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"products",
+						"1"
+					]
+				},
+				"description": "Melihat detail produk spesifik berdasarkan ID (Subbab 3.4.5)"
+			},
+			"response": []
+		},
+		{
+			"name": "Store",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "OK Computer",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "Album legendaris Radiohead tahun 1997 dengan hits Paranoid Android dan Karma Police.",
+							"type": "text"
+						},
+						{
+							"key": "category_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "price",
+							"value": "520000",
+							"type": "text"
+						},
+						{
+							"key": "stock",
+							"value": "10",
+							"type": "text"
+						},
+						{
+							"key": "img",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/products",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"products"
+					]
+				},
+				"description": "Menambahkan produk album musik baru sekaligus upload file gambar ke storage public (Subbab 3.4.5 & 3.4.6)"
+			},
+			"response": []
+		},
+		{
+			"name": "Update",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"AM (Deluxe Edition)\",\n    \"description\": \"Album studio kelima legendaris Arctic Monkeys edisi deluxe dengan bonus tracks.\",\n    \"category_id\": 1,\n    \"price\": 540000,\n    \"stock\": 20\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/products/1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"products",
+						"1"
+					]
+				},
+				"description": "Memperbarui data produk musik yang sudah ada (Subbab 3.4.5)"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/products/1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"products",
+						"1"
+					]
+				},
+				"description": "Menghapus produk berdasarkan ID (Subbab 3.4.5)"
+			},
+			"response": []
+		},
+		{
+			"name": "Profile",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/profile",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"profile"
+					]
+				},
+				"description": "Melihat informasi user yang sedang login dengan Bearer token (Subbab 3.4.7)"
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/logout",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"logout"
+					]
+				},
+				"description": "Menghapus personal access token aktif saat ini (Subbab 3.4.7)"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://127.0.0.1:8000/api",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

@@ -10,11 +10,12 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    // POST /api/register
     public function register(Request $request)
     {
         $validated = $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|string|email|max:255|unique:users',
+            'name'     => 'required|string',
+            'email'    => 'required|string|email|unique:users',
             'password' => 'required|string|min:6',
         ]);
 
@@ -22,15 +23,15 @@ class AuthController extends Controller
             'name'     => $validated['name'],
             'email'    => $validated['email'],
             'password' => bcrypt($validated['password']),
-            'role'     => 'user',
         ]);
 
         return response()->json([
             'message' => 'Register success',
             'user'    => $user,
-        ], 201);
+        ]);
     }
 
+    // POST /api/login -> Sanctum Bearer Token
     public function login(Request $request)
     {
         $request->validate([
@@ -40,7 +41,7 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (! $user || ! Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
                 'email' => ['Invalid credentials.'],
             ]);
@@ -52,26 +53,20 @@ class AuthController extends Controller
             'message'    => 'Login success',
             'token'      => $token,
             'token_type' => 'Bearer',
-            'user'       => [
-                'id'    => $user->id,
-                'name'  => $user->name,
-                'email' => $user->email,
-                'role'  => $user->role,
-            ]
         ]);
     }
 
+    // GET /api/profile
     public function profile(Request $request)
     {
         return response()->json($request->user());
     }
 
+    // POST /api/logout
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json([
-            'message' => 'Logout success'
-        ]);
+        return response()->json(['message' => 'Logout success']);
     }
 }
